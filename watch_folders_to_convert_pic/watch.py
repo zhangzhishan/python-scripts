@@ -40,19 +40,26 @@ class EventHandler(pyinotify.ProcessEvent):
         small_path = '/data/www/imgs/small/'
         filename = os.path.basename(pathname)
         original_path = pathname
-        time.sleep(1)
+        time.sleep(10)
         print filename
         print pathname
         filename = os.path.splitext(filename)[0]
         file_extension = '.png'
-        im = Image.open(original_path)
-        print im
-        new_im = pic.large(im)
-        new_im.save(large_path + filename + file_extension)
-        print '[*] large,ok! ' + filename
-        new_im = pic.small(im)
-        new_im.save(small_path + filename + file_extension)
-        print '[*] small,ok ' + filename
+        k = 0
+        while k <= 1000:
+            try:
+                im = Image.open(original_path)
+                print im
+                new_im = pic.large(im)
+                new_im.save(large_path + filename + file_extension)
+                print '[+] ok!' + filename
+                new_im = pic.small(im)
+                new_im.save(small_path + filename + file_extension)
+                print '[+] small,ok' + filename
+                k = 1000
+            except Exception:
+                k = k + 1
+                pass
 
 handler = EventHandler()
 notifier = pyinotify.Notifier(wm, handler)

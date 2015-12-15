@@ -4,6 +4,7 @@
 
 from PIL import Image
 
+
 def large(im):
     (x, y) = im.size
     new_x = 640
@@ -22,8 +23,9 @@ def large(im):
         rate = rate_x if rate_x > rate_y else rate_y
     im.thumbnail((int(x / rate), int(y / rate)))
     (thumb_x, thumb_y) = im.size
-    new_im.paste(im, ((new_x - thumb_x)/2, (new_y - thumb_y)/2, (new_x + thumb_x)/2, (new_y + thumb_y)/2))
+    new_im.paste(im, ((new_x - thumb_x) / 2, (new_y - thumb_y) / 2, (new_x + thumb_x) / 2, (new_y + thumb_y) / 2))
     return new_im
+
 
 def small(im):
     (x, y) = im.size
@@ -38,7 +40,7 @@ def small(im):
     rate = rate_x if rate_x < rate_y else rate_y
     im.thumbnail((int(x / rate), int(y / rate)), Image.ANTIALIAS)
     (thumb_x, thumb_y) = im.size
-    new_im.paste(im, ((new_x - thumb_x)/2, (new_y - thumb_y)/2, (new_x + thumb_x)/2, (new_y + thumb_y)/2))
+    new_im.paste(im, ((new_x - thumb_x) / 2, (new_y - thumb_y) / 2, (new_x + thumb_x) / 2, (new_y + thumb_y) / 2))
     return new_im
 
 if __name__ == '__main__':

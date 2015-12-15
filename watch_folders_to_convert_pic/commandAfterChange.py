@@ -4,8 +4,6 @@
 
 import re
 import pyinotify
-import pic
-import Image
 import os
 import time
 wm = pyinotify.WatchManager()
@@ -15,37 +13,37 @@ mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MOVED_TO
 class EventHandler(pyinotify.ProcessEvent):
     def process_IN_CREATE(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def process_IN_MODIFY(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def process_IN_MOVE_SELF(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def process_IN_MOVED_TO(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def process_IN_MOVED_FROM(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def process_IN_DELETE(self, event):
         self.rebuild(event)
 
     def process_IN_CLOSE_WRITE(self, event):
         self.rebuild(event)
-        self.picchange(event.pathname)
+        self.executeCommand(event.pathname)
 
     def rebuild(self, event):
         chang_name=re.compile(".+\.swp$|.+\.swx$|.+\.swpx$")
         if not chang_name.match(event.pathname):
             print event.pathname
 
-    def picchange(self, pathname):
+    def executeCommand(self, pathname):
         large_path = '/data/www/imgs/large/'
         small_path = '/data/www/imgs/small/'
         filename = os.path.basename(pathname)
@@ -53,18 +51,13 @@ class EventHandler(pyinotify.ProcessEvent):
         time.sleep(10)
         print filename
         print pathname
+        os.system("ls")
         filename = os.path.splitext(filename)[0]
         file_extension = '.png'
         k = 0
         while k <= 1000:
             try:
-                im = Image.open(original_path)
-                print im
-                new_im = pic.large(im)
-                new_im.save(large_path + filename + file_extension)
                 print '[+] ok!' + filename
-                new_im = pic.small(im)
-                new_im.save(small_path + filename + file_extension)
                 print '[+] small,ok' + filename
                 k = 1000
             except Exception:
@@ -73,5 +66,5 @@ class EventHandler(pyinotify.ProcessEvent):
 
 handler = EventHandler()
 notifier = pyinotify.Notifier(wm, handler)
-wdd = wm.add_watch('/data/www/imgs/original/', mask, rec=True, auto_add=True)
+wdd = wm.add_watch('~/code/', mask, rec=True, auto_add=True)
 notifier.loop()
